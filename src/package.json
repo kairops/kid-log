@@ -1,0 +1,34 @@
+{
+  "name": "kid-log",
+  "version": "0.1.0",
+  "description": "Kid Log",
+  "main": "start.js",
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "bcrypt": "^3.0.0",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.3",
+    "debug": "^3.1.0",
+    "delay": "^4.1.0",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "helmet": "^3.13.0",
+    "mongoose": "^5.2.9",
+    "redis": "^2.8.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "gulp": "^4.0.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "sonarqube-scanner": "^2.1.1",
+    "supertest": "^3.3.0"
+  },
+  "scripts": {
+    "start": "npm install && nodemon start.js",
+    "test": "nyc --reporter=lcov mocha --exit --timeout 10000"
+  },
+  "author": "Kairos DS",
+  "license": "MIT"
+}
