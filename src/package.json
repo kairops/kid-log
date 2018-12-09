@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "npm install && nodemon start.js",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 10000"
+    "test": "nyc --reporter=lcov  mocha --exit && nyc report"
   },
   "author": "Kairos DS",
   "license": "MIT"
