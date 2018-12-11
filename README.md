@@ -2,19 +2,7 @@
 
 Kid Log service
 
-## Instalation
-
-```console
-npm install
-```
-
-## Run service
-
-```console
-npm start
-```
-
-Develop enviroment:
+## Dev enviroment
 
 ```console
 $ docker-compose up
