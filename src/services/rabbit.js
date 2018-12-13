@@ -1,6 +1,5 @@
 var amqp = require('amqplib/callback_api')
 var debug = require('debug')('app:rabbit')
-var redis = require('../services/redis')
 
 class Rabbit {
     constructor() {
@@ -8,7 +7,7 @@ class Rabbit {
         this.pubChannel = null
         this.offlinePubQueue = []
         this.start = function () {
-            amqp.connect(process.env.RABBIT_CONECTION, function (err, conn) {
+            amqp.connect(process.env.RABBIT_CONNECTION, function (err, conn) {
                 if (err) {
                     rabbit.amqpConn = null
                     debug("rabbit err", err.message)
@@ -62,15 +61,15 @@ class Rabbit {
         this.publish = function (content) {
             try {
                 if (rabbit.pubChannel != null) {
-                    rabbit.pubChannel.assertQueue(process.env.QUEUE_NAME, { durable: true })
-                    rabbit.pubChannel.sendToQueue(process.env.QUEUE_NAME, content, {}, function (err, ok) {
+                    rabbit.pubChannel.assertQueue(process.env.RABBIT_QUEUE_NAME, { durable: true })
+                    rabbit.pubChannel.sendToQueue(process.env.RABBIT_QUEUE_NAME, content, {}, function (err, ok) {
                         if (err) {
                             debug("Message offLine published: ", err)
                             rabbit.offlinePubQueue.push(content)
                             rabbit.pubChannel.connection.close()
                             return rabbit.start
                         } else {
-                            debug("Message published", process.env.QUEUE_NAME)
+                            debug("Message published", process.env.RABBIT_QUEUE_NAME)
                         }
                     })
                 } else {
@@ -88,12 +87,12 @@ class Rabbit {
             if (rabbit.amqpConn != null) {
                 rabbit.amqpConn.createChannel(function (err, ch) {
                     ch.prefetch(1)
-                    ch.assertQueue(process.env.QUEUE_NAME, { durable: true })
-                    ch.consume(process.env.QUEUE_NAME, processMsg, { noAck: false })
-                    debug("Worker is started", process.env.QUEUE_NAME)
+                    ch.assertQueue(process.env.RABBIT_QUEUE_NAME, { durable: true })
+                    ch.consume(process.env.RABBIT_QUEUE_NAME, processMsg, { noAck: false })
+                    debug("Worker is started", process.env.RABBIT_QUEUE_NAME)
                     function processMsg(msg) {
                         var obj = JSON.parse(msg.content.toString())
-                        debug("Message received %s", process.env.QUEUE_NAME, obj)                    
+                        debug("Message received %s", process.env.RABBIT_QUEUE_NAME, obj)                    
                         
                         ch.ack(msg)
                     }
