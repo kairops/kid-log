@@ -1,5 +1,7 @@
 var amqp = require('amqplib/callback_api')
 var debug = require('debug')('app:rabbit')
+let logManager = require('../managers/logManager')
+let redis = require('../services/redis')
 
 class Rabbit {
     constructor() {
@@ -47,7 +49,6 @@ class Rabbit {
                     })
                     rabbit.pubChannel = ch
                     while (true) {
-                        debug("check if offLine Pub Queue have items")
                         var content = rabbit.offlinePubQueue.shift()
                         if (!content) break
                         rabbit.publish(content)
@@ -92,8 +93,16 @@ class Rabbit {
                     debug("Worker is started", process.env.RABBIT_QUEUE_NAME)
                     function processMsg(msg) {
                         var obj = JSON.parse(msg.content.toString())
-                        debug("Message received %s", process.env.RABBIT_QUEUE_NAME, obj)                    
-                        
+                        debug("Message received from: ", process.env.RABBIT_QUEUE_NAME, obj)
+                        if (obj.action == "save") {                    
+                            logManager.save(obj.data, function (state, message) {
+                                debug(obj.jobId, ["STATE", state, "MESSAGE", message])                                    
+                                redis.hmsetAsync(obj.jobId, ["STATE", state, "MESSAGE", message], function(err, res) {
+                                    if (err) debug("Redis hmset error: " , err)
+                                    redis.end(true)
+                                })
+                            })
+                        }
                         ch.ack(msg)
                     }
                 })
