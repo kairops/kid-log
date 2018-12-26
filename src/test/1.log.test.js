@@ -5,6 +5,7 @@ let app = require("../app")
 describe("Log", function() {
     it("Create Log register", function(done) {
         request(app).post("/log")
+        .send({device: '1', code: 1, message: 'Log message'})
         .expect(200)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
