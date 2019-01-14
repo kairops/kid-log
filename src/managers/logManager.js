@@ -8,7 +8,7 @@ class LogManager {
             var log = new LogModel(data)
             log.save(function(err) {
                 if (err) debug(err)
-                next((err ? "ERROR": "OK"), (err ? err.message : ""))
+                next((err ? "ERROR": "OK"), (err ? err.message : "Data saved"))
             })            
         }
     }

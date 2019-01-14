@@ -1,5 +1,5 @@
 {
-  "name": "kid-log",
+  "name": "kid-logger",
   "version": "0.1.0",
   "description": "Kid Log",
   "main": "start.js",

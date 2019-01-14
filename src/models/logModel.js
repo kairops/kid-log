@@ -3,10 +3,11 @@ let Schema = mongoose.Schema
 
 let LogSchema = Schema(
     {
-        device   : { type: String, required: true },        
-        code     : { type: String, required: true },
-        message  : { type: String, required: true },
-        createdAt: { type: Date }        
+        device   : { type: String, required: true },    // Device ID     
+        level    : { type: String, required: true },    // SEVERE, WARNING, INFO, CONFIG, FINE, FINER, FINEST
+        message  : { type: String, required: true },    // Text
+        code     : { type: String },                    // Bitacora Code
+        createdAt: { type: Date, default: Date.now() }  // Created Date
     },
     {
         versionKey: false
